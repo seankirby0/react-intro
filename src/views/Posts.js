@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import PostDetail from '../components/PostDetail';
 import moment from 'moment';
+import { Link } from 'react-router-dom';
 
 export default class Posts extends Component {
     constructor(props){
@@ -28,9 +29,12 @@ export default class Posts extends Component {
             posts.sort((a,b) =>  moment(a.date_created) < moment(b.date_created))
         }
         return (
-            <ul className='list-group'>
-                {posts.map((post, idx) => <PostDetail post={post} key={idx} />)}
-            </ul>
+            <>
+                <Link to="/create-post" class="btn btn-secondary mt-3 mb-3">Create Post</Link>
+                <ul className='list-group'>
+                    {posts.map((post, idx) => <PostDetail post={post} key={idx} />)}
+                </ul>
+            </>
         )
     }
 }

@@ -1,6 +1,15 @@
 import React, { Component } from 'react'
+import { Redirect } from 'react-router-dom';
 
 export default class CreateUser extends Component {
+    constructor(props){
+        super(props);
+
+        this.state = {
+            redirect: null
+        }
+    }
+
     handleSubmit = (e) =>{
         e.preventDefault();
         const username = e.target.username.value;
@@ -13,6 +22,10 @@ export default class CreateUser extends Component {
             console.log('Password Does Not Match')
             return
         }
+
+        let myHeaders = new Headers();
+        myHeaders.append("Content-Type", "application/json");
+        // myHeaders.append("Accept", "*/*")
     
 
 
@@ -24,14 +37,23 @@ export default class CreateUser extends Component {
 
         fetch('http://localhost:5000/api/create-user',{
             method: 'POST',
+            headers: myHeaders,
             body: requestBody
         }).then(res => res.json())
-            .then(data => console.log(data))
+            .then(data => {
+                console.log(data)
+                this.setState({
+                    redirect: `users/${data.id}`
+                })
+            })
             .catch(err => console.error(err))
     }
 
     render() {
+
         return (
+            this.state.redirect ? 
+            <Redirect to={this.state.redirect} /> :
             <div>
                 This is the Create User Page
                 <form onSubmit={this.handleSubmit}>

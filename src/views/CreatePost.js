@@ -1,32 +1,52 @@
 import React, { Component } from 'react'
 
 export default class CreatePost extends Component {
-    handleSubmit = (e) => {
-        e.preventDefault();
-        const title = e.target.title.value;
-        const body = e.target.body.value;
+    handlePostSubmit = (synthEvent) => {
+        synthEvent.preventDefault();
+        console.log(synthEvent)
+        const title = synthEvent.target.title.value;
+        const body = synthEvent.target.body.value;
 
-        console.log(title, body); 
-    
+        console.log(title, body)
 
-        const requestBody = JSON.stringify({
-            "title" : title,
-            "body" : body,
-        })
+        let myHeaders = new Headers();
+        myHeaders.append("Content-Type", "application/json");
+        
+        const raw = JSON.stringify({
+          "title": title,
+          "body": body,
+        });
+        
+        const requestOptions = {
+          method: 'POST',
+          headers: myHeaders,
+          body: raw,
+        };
+        
+        fetch("http://localhost:5000/api/create-post", requestOptions)
+          .then(response => response.json())
+          .then(data => console.log(data))
+          .catch(error => console.error('error', error));
+        
 
-        fetch('http://localhost:5000/api/create-post',{
-            method: 'POST',
-            body: requestBody
-        }).then(res => res.json())
-            .then(data => console.log(data))
-            .catch(err => console.error(err))
+        // const requestBody = JSON.stringify({
+        //     "title" : title,
+        //     "body" : body,
+        // })
+
+        // fetch('http://localhost:5000/api/create-post',{
+        //     method: 'POST',
+        //     body: requestBody
+        // }).then(res => res.json())
+        //     .then(data => console.log(data))
+        //     .catch(err => console.error(err))
 
     }
     render() {
         return (
             <div>
-                Create Post Page
-                <form onSubmit={this.handleSubmit}>
+                <h2>Create Post</h2>
+                <form onSubmit={this.handlePostSubmit}>
                     <div className='form-group'>
                         <fieldset>
                             <label htmlFor='title'>Title</label>
